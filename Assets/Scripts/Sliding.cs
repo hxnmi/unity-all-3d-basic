@@ -41,6 +41,9 @@ public class Sliding : MonoBehaviour
 
         if (Input.GetKeyUp(slideKey) && pma.sliding)
             StopSlide();
+
+        if (pma.backCrouch || Input.GetKeyUp(slideKey))
+            playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
     }
 
     private void FixedUpdate()
@@ -52,6 +55,7 @@ public class Sliding : MonoBehaviour
     private void StartSlide()
     {
         pma.sliding = true;
+        pma.backCrouch = false;
 
         playerObj.localScale = new Vector3(playerObj.localScale.x, slideYScale, playerObj.localScale.z);
         rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
@@ -77,8 +81,6 @@ public class Sliding : MonoBehaviour
             rb.AddForce(pma.GetSlopeMoveDirection(inputDirection) * slideForce, ForceMode.Force);
         }
 
-        
-
         if (slideTimer <= 0)
             StopSlide();
     }
@@ -86,7 +88,5 @@ public class Sliding : MonoBehaviour
     private void StopSlide()
     {
         pma.sliding = false;
-
-        playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
     }
 }

@@ -28,6 +28,7 @@ public class PlayerMovementAdvanced : MonoBehaviour
     public float crouchSpeed;
     public float crouchYScale;
     private float startYScale;
+    public bool backCrouch;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -135,7 +136,7 @@ public class PlayerMovementAdvanced : MonoBehaviour
         }
 
         // crouching
-        else if (Input.GetKeyDown(crouchKey))
+        else if (Input.GetKey(crouchKey))
         {
             state = MovementState.crouching;
             desiredMoveSpeed = crouchSpeed;
@@ -147,7 +148,7 @@ public class PlayerMovementAdvanced : MonoBehaviour
             state = MovementState.sprinting;
             desiredMoveSpeed = sprintSpeed;
         }
-        
+
         // walking
         else if (grounded)
         {
@@ -242,7 +243,14 @@ public class PlayerMovementAdvanced : MonoBehaviour
                 rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             }
         }
-        
+
+        if (rb.velocity.magnitude <= crouchSpeed + 0.1f && Input.GetKey(crouchKey))
+        {
+            backCrouch = true;
+            jumpKey = KeyCode.None;
+        }
+        else
+            jumpKey = KeyCode.Space;
     }
 
     private void Jump()
